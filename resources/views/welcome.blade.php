@@ -20,32 +20,23 @@
     <form id="geoipForm" method="post" action="{{ route('geoip.query') }}">
         @csrf
         <label for="ip">Enter IP Address:</label>
-        <input type="text" name="ip" id="ip" value="{{ old('ip', session('geoip.ip')) }}">
-        <button type="button" id="submitButton">Submit</button>
+        <input type="text" name="ip" id="ip" value="{{ old('ip', $userIp) }}">
+        <button type="submit">Submit</button>
     </form>
 
-    @if(isset($geoip))
+    @if($geoip = Cache::get('geoip'))
         <h2>GeoIP Information:</h2>
         <p>IP Address: {{ $geoip['ip'] }}</p>
         <p>Country Code: {{ $geoip['country_code'] }}</p>
         <p>Country Name: {{ $geoip['country_name'] }}</p>
-    @endif
 
-    <script>
-    $(document).ready(function() {        
-        var userIp = "{{ session('userIp') }}";
-        var inputIp = $("#ip").val();
+        <script>
+            $(document).ready(function() {
+                $('#ip').val('{{ $geoip["ip"] }}');
+            });
+        </script>
+        @endif
         
-        $.getJSON('https://api.ipify.org?format=json', function(data) {
-            if (userIp === data.ip || inputIp === '') {
-                $('#ip').val(data.ip);
-            }
-        });
-
-        $('#submitButton').on('click', function() {
-            $('#geoipForm').submit();
-        });
-    });
-    </script>
 </body>
 </html>
+
