@@ -10,6 +10,13 @@ use Cache;
 
 class GeoIPController extends Controller
 {
+    protected $geoIP;
+
+    public function __construct(GeoIP $geoIP)
+    {
+        $this->geoIP = $geoIP;
+    }
+
     public function index(Request $request)
     {
         $ipAddress = $request->ip();
